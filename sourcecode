@@ -1,0 +1,239 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+
+#define MAX_INTREBARE 256                                   //se stabileste nr. maxim de caractere al unei intrebari
+#define MAX_RASPUNS 128                                     //se stabileste nr. maxim de caractere al unui raspuns
+#define TOTAL_INTREBARI 26                                  //se stabileste nr. total de intreabri pentru un chestionar
+#define MAX_RASPUNSURI_GRESITE 4                            //se stabileste nr. maxim de raspunsuri gresite permise
+#define MIN_RASPUNSURI_CORECTE 22                           //se stabileste nr. minim de raspusnuri corecte pt. a obtine calificativul admis
+
+typedef struct
+{
+    char intrebare[MAX_INTREBARE];
+    char raspunsA[MAX_RASPUNS];
+    char raspunsB[MAX_RASPUNS];
+    char raspunsC[MAX_RASPUNS];
+    char raspuns_corect;
+}intrebari_chestionar;                                                                  //definim o structura de date ce contine date despre fiecare intrebare
+
+void clearInputBuffer() {                                                               //functia clearInputBuffer are rolul de a goli datele din InputBuffer
+    int c;                                                                              //se declara variabila c pentru a citi elementele din InputBuffer
+    while ((c = getchar()) != '\n' && c != EOF){}                                       //se citeste fiecare element din InputBuffer introdus de ultilizator la tastatura
+}                                                                                       //pana cand se ajunge la caracterul '\n' sau la finalul fisierului. se elimina
+                                                                                        //orice caracter ramas in InputBuffer pentru a nu se amesteca Input-urile date de user
+void chestionar() {
+    char nume[64];                                                                      //declaram o variabila ce stocheaza numele utilizatorului
+    intrebari_chestionar intrebari[TOTAL_INTREBARI];                                    //declaram un array de lungime TOTAL_INTREBARI, fiecare element din array va contine
+                                                                                        //datele stocate in structura intrebari_chestionar
+    strcpy(intrebari[0].intrebare, "Pe ce drumuri sunt permise oprirea si stationarea vehiculelor si pe partea stanga, in sensul de mers?");
+    strcpy(intrebari[0].raspunsA, "Pe drumurile cu trafic redus");
+    strcpy(intrebari[0].raspunsB, "Pe drumurile cu sens unic, daca ramane liberă cel putin o banda de circulatie");
+    strcpy(intrebari[0].raspunsC, "Pe orice drum");
+    intrebari[0].raspuns_corect = 'B';
+
+    strcpy(intrebari[1].intrebare, "Cum trebuie sa procedati cand ajungeti in spatele unui tramvai oprit intr-o statie fara refugiu pentru pietoni?");
+    strcpy(intrebari[1].raspunsA, "Sa opriti in dreptul ultimei usi");
+    strcpy(intrebari[1].raspunsB, "Sa opriti in spatele acestuia si sa va reluati deplasarea numai după ce usile tramvaiului au fost inchise");
+    strcpy(intrebari[1].raspunsC, "Sa opriti la o distanta de 25 m de tramvai");
+    intrebari[1].raspuns_corect = 'B';
+
+    strcpy(intrebari[2].intrebare, "Este recomandabil sa pastram sau sa depozitam anumite obiecte pe podeaua autovehiculului?");
+    strcpy(intrebari[2].raspunsA, "Da, atata vreme cat acestea nu ne stanjenesc in actionarea comenzilor autovehiculului");
+    strcpy(intrebari[2].raspunsB, "Da, daca nu mai exista un alt loc in care să ssezam obiectele de mici dimensiuni");
+    strcpy(intrebari[2].raspunsC, "Nu, intrucat exista posibilitatea rostogolirii acestor obiecte, care pot ajunge sub pedale si crea situatii periculoase");
+    intrebari[2].raspuns_corect = 'C';
+
+    strcpy(intrebari[3].intrebare, "Cum se acorda primul ajutor in cazul plagilor taiate?");
+    strcpy(intrebari[3].raspunsA, "Acoperiti rana si opriti sangerarea, apoi transportati ranitul la medic sau la spital");
+    strcpy(intrebari[3].raspunsB, "Opriti sangerarea prin coaserea plagii");
+    strcpy(intrebari[3].raspunsC, "Transportati ranitul la medic, fara sa faceti nimic altceva");
+    intrebari[3].raspuns_corect = 'A';
+
+    strcpy(intrebari[4].intrebare, "Ce obligatii are conducatorul unui autovehicul care circula in zona de frontiera?");
+    strcpy(intrebari[4].raspunsA, "Sa opreasca imediat autovehiculul la semnalele regulamentare ale politistilor de frontiera aflati in zona de competenta");
+    strcpy(intrebari[4].raspunsB, "Sa reduca viteza sub limita legala");
+    strcpy(intrebari[4].raspunsC, "Sa circule cu faza de intalnire in functiune, deoarece se afla in zona de frontiera");
+    intrebari[4].raspuns_corect = 'A';
+
+    strcpy(intrebari[5].intrebare, "La intalnirea unui vehicul greu cu unul usor, pe un drum public ingust, pentru a face posibila trecerea va manevra cu spatele:");
+    strcpy(intrebari[5].raspunsA, "Vehiculul usor");
+    strcpy(intrebari[5].raspunsB, "Vehiculul greu");
+    strcpy(intrebari[5].raspunsC, "La libera intelegere");
+    intrebari[5].raspuns_corect = 'A';
+
+    strcpy(intrebari[6].intrebare, "Ce semnificatie are marcajul longitudinal aplicat sub forma unei linii continue pe axul drumurilor publice?");
+    strcpy(intrebari[6].raspunsA, "Ajuta conducatorii auto sa se orienteze pe timp de noapte");
+    strcpy(intrebari[6].raspunsB, "Nu permite incalcarea lui de catre conducatorii de vehicule");
+    strcpy(intrebari[6].raspunsC, "Permite depasirea vehiculelor");
+    intrebari[6].raspuns_corect = 'B';
+
+    strcpy(intrebari[7].intrebare, "Ati accidentat un pieton care traversa strada neregulamentar. Ce obligatii legale va revin?");
+    strcpy(intrebari[7].raspunsA, "Anuntati imediat politia, nu modificati sau stergeti urmele accidentului si ramaneti pe loc");
+    strcpy(intrebari[7].raspunsB, "Va prezentati de urgenta la cea mai apropiata unitate de politie");
+    strcpy(intrebari[7].raspunsC, "Deoarece vinovatia nu va apartine, puteti continua drumul daca accidentul nu este grav");
+    intrebari[7].raspuns_corect = 'A';
+
+    strcpy(intrebari[8].intrebare, "Cum procedeaza conducatorul de autovehicul cand, la apropierea de o trecere la nivel cu calea ferata fara bariere, luminile rosii din dreptul indicatorului de atentie in cruce se aprind si se sting alternativ?");
+    strcpy(intrebari[8].raspunsA, "Reduce viteza si opreste numai in cazul apropierii trenului");
+    strcpy(intrebari[8].raspunsB, "Opreste vehiculul fara a depasi indicatorul");
+    strcpy(intrebari[8].raspunsC, "Reduce viteza si, dupa ce se asigura, isi continua deplasarea");
+    intrebari[8].raspuns_corect = 'B';
+
+    strcpy(intrebari[9].intrebare, "Pana la transportarea victimei la spital, poziţia de asteptare poate fi:");
+    strcpy(intrebari[9].raspunsA, "O pozitie cat mai comoda");
+    strcpy(intrebari[9].raspunsB, "O pozitie care sa permita o buna respiratie");
+    strcpy(intrebari[9].raspunsC, "O pozitie comoda pentru transport");
+    intrebari[9].raspuns_corect = 'B';
+
+    strcpy(intrebari[10].intrebare, "Cum procedeaza conducatorul autovehiculului cand, aflandu-se intr-o comuna, in imediata apropiere a unei treceri pentru pietoni semnalizate ca atare, intentioneaza sa depaseasca un vehicul aflat in miscare?");
+    strcpy(intrebari[10].raspunsA, "Executa depasirea cu viteza redusa");
+    strcpy(intrebari[10].raspunsB, "Nu executa depasirea");
+    strcpy(intrebari[10].raspunsC, "Executa depasirea cu viteza sporita");
+    intrebari[10].raspuns_corect = 'B';
+
+    strcpy(intrebari[11].intrebare, "Cum trebuie sa aveti reglat sistemul de lumini pentru circulatia pe timp de noapte?");
+    strcpy(intrebari[11].raspunsA, "Sa vedeti cat mai bine in fata, indiferent daca sunt deranjati ceilalti participanti la trafic cu care va intersectati;");
+    strcpy(intrebari[11].raspunsB, "Sa asigurati, cel putin, functionarea farului din partea dreapta");
+    strcpy(intrebari[11].raspunsC, "Astfel incat sa vedeti si ss fiti vazut, fara a-i stanjeni pe ceilalti participanti la trafic");
+    intrebari[11].raspuns_corect = 'C';
+
+    strcpy(intrebari[12].intrebare, "Cum veti proceda intr-o curba lipsita de vizibilitate, daca in fata dvs. circula o bicicleta?");
+    strcpy(intrebari[12].raspunsA, "Reduceti viteza si va deplasati in spatele bicicletei, pana cand drumul va ofera conditii bune de vizibilitate pentru depasire");
+    strcpy(intrebari[12].raspunsB, "Claxonati pentru a atrage atentia biciclistului ca il depasiti");
+    strcpy(intrebari[12].raspunsC, "Va continuati deplasarea, deoarece in aceasta situatie bicicletele pot fi depasite");
+    intrebari[12].raspuns_corect = 'A';
+
+    strcpy(intrebari[13].intrebare, "La semnalul dat de personalul autorizat din zona lucrarilor pe drumurile publice, prin rotirea vioaie a bratului, aveti obligatia:");
+    strcpy(intrebari[13].raspunsA, "Sa mariti viteza de deplasare a autovehiculului");
+    strcpy(intrebari[13].raspunsB, "Sa ocoliti obstacolul creat in carosabil, circuland in sens giratoriu");
+    strcpy(intrebari[13].raspunsC, "Sa ocoliti obstacolul indicat de acesta");
+    intrebari[13].raspuns_corect = 'A';
+
+    strcpy(intrebari[14].intrebare, "Este permisa stationarea vehiculelor in zona de actiune a indicatorului (Drum ingustat)?");
+    strcpy(intrebari[14].raspunsA, "Da");
+    strcpy(intrebari[14].raspunsB, "Nu");
+    strcpy(intrebari[14].raspunsC, "Legea nu prevede nimic cu privire la acest aspect");
+    intrebari[14].raspuns_corect = 'B';
+
+    strcpy(intrebari[15].intrebare, "Intr-o intersecţie, prezenta unei ambulante ce se deplaseaza la o interventie obliga pe ceilalti conducatori:");
+    strcpy(intrebari[15].raspunsA, "Sa reduca viteza si sa-si continue drumul cu atentie");
+    strcpy(intrebari[15].raspunsB, "Sa respecte semnificatia culorii semaforului");
+    strcpy(intrebari[15].raspunsC, "Sa acorde prioritate de trecere ambulantei");
+    intrebari[15].raspuns_corect = 'C';
+
+    strcpy(intrebari[16].intrebare, "Ce obligatii aveti la trecerea pentru pietoni, pe sensul dvs. de mers?");
+    strcpy(intrebari[16].raspunsA, "Sa acordati prioritate de trecere si pietonilor care circula pe celalalt sens de mers");
+    strcpy(intrebari[16].raspunsB, "Sa reduceti viteza si sa va strecurati printre pietoni");
+    strcpy(intrebari[16].raspunsC, "Sa acordati prioritate de trecere pietonilor afltti in traversare");
+    intrebari[16].raspuns_corect = 'C';
+
+    strcpy(intrebari[17].intrebare, "Cu ce viteza se poate circula in apropierea unei intersectii?");
+    strcpy(intrebari[17].raspunsA, "Limita maxima de viteza va fi respectata doar in cazul intersectiilor dirijate");
+    strcpy(intrebari[17].raspunsB, "Cu o viteza care sa permita oprirea, pentru a acorda prioritate de trecere participantilor la trafic care au acest drept");
+    strcpy(intrebari[17].raspunsC, "Limita maxima de viteza in localitati va fi de 50 km/h, iar in afara localitatilor de 130 km/h");
+    intrebari[17].raspuns_corect = 'B';
+
+    strcpy(intrebari[18].intrebare,"Este permisa trecerea peste marcajul longitudinal format dintr-o linie continua si alta discontinua?");
+    strcpy(intrebari[18].raspunsA, "Da, daca marcajul nu este intr-o curba");
+    strcpy(intrebari[18].raspunsB, "Da, daca linia discontinua este cea mai apropiata de vehicul in directia de mers");
+    strcpy(intrebari[18].raspunsC, "Nu, chiar in cazul in care linia discontinua este cea mai apropiata de vehicul");
+    intrebari[18].raspuns_corect = 'B';
+
+    strcpy(intrebari[19].intrebare, "La franare, vehiculul derapeaza. Cum reacaionati corect?");
+    strcpy(intrebari[19].raspunsA, "Franati la maximum");
+    strcpy(intrebari[19].raspunsB, "Nu actionati frana si rotiti volanul in sens invers deraparii");
+    strcpy(intrebari[19].raspunsC, "Opriti motorul");
+    intrebari[19].raspuns_corect = 'B';
+
+    strcpy(intrebari[20].intrebare, "La intalnirea indicatorului de avertizare in cruce, amplasat la trecerile la nivel cu calea ferata fara bariere, conducatorii de vehicule vor opri:");
+    strcpy(intrebari[20].raspunsA, "In locul cu vizibilitate maxima, fara a depasi indicatorul");
+    strcpy(intrebari[20].raspunsB, "Cat mai aproape de calea ferata, dar nu mai putin de 5 m de aceasta");
+    strcpy(intrebari[20].raspunsC, "La cel mult 5 m de calea ferata");
+    intrebari[20].raspuns_corect = 'A';
+
+    strcpy(intrebari[21].intrebare, "Este permisa intoarcerea pe autostrada?");
+    strcpy(intrebari[21].raspunsA, "Nu");
+    strcpy(intrebari[21].raspunsB, "Da");
+    strcpy(intrebari[21].raspunsC, "Da, daca sensul de mers este blocat");
+    intrebari[21].raspuns_corect = 'A';
+
+    strcpy(intrebari[22].intrebare, "Cum procedati la semnalul politistului cu bratul ridicat vertical?");
+    strcpy(intrebari[22].raspunsA, "Opriti, indiferent din ce directie va apropiati, si asteptati urmatorul sau semnal");
+    strcpy(intrebari[22].raspunsB, "Reduceti viteza si circulati in directia permisa de pozitia bratului");
+    strcpy(intrebari[22].raspunsC, "Reduceti viteza si il ocoliti");
+    intrebari[22].raspuns_corect = 'A';
+
+    strcpy(intrebari[23].intrebare, "O functie a bandajului este:");
+    strcpy(intrebari[23].raspunsA, "De a preveni murdarirea hainelor");
+    strcpy(intrebari[23].raspunsB, "De a acoperi aspectul neplacut al ranii");
+    strcpy(intrebari[23].raspunsC, "De a opri hemoragia");
+    intrebari[23].raspuns_corect = 'C';
+
+    strcpy(intrebari[24].intrebare, "Ce se intelege prin distanta de 100 m pentru semnalizarea schimbarii directiei de mers in afara localitatii?");
+    strcpy(intrebari[24].raspunsA, "Distanta fata de vehiculul care circula din spate");
+    strcpy(intrebari[24].raspunsB, "Distanta parcursa din momentul semnalizarii intentiei de a efectua manevra si locul unde se produce schimbarea directiei de mers");
+    strcpy(intrebari[24].raspunsC, "Distansa fata de locul terminarii manevrei de depasire");
+    intrebari[24].raspuns_corect = 'B';
+
+    strcpy(intrebari[25].intrebare, "La ce distantă sunt instalate cele trei panouri suplimentare pentru avertizarea apropierii de o trecere la nivel cu calea ferata?");
+    strcpy(intrebari[25].raspunsA, "La 300, 200 si, respectiv, 100 m");
+    strcpy(intrebari[25].raspunsB, "La 90, 60 si, respectiv, 30 m");
+    strcpy(intrebari[25].raspunsC, "La 150, 100 si, respectiv, 50 m");
+    intrebari[25].raspuns_corect = 'C';
+
+    int numar_raspunsuri_corecte = 0;                                                   //se initiaza un counter pt. numarul de raspunsuri corecte
+    int numar_raspunsuri_gresite = 0;                                                   //se initiaza un counter pt. numarul de raspunsuri gresite
+    char raspuns;                                                                       //se initiaza o variabila ce va stoca varianta de raspuns pe care o alege user-ul
+    int restart = 1;                                                                    //se initiaza conditia restart=1, valoare pt. care chestionarul ruleaza
+
+    while (restart) {                                                                   //cat timp valoarea variabilei 'restart' ramane 1, chestionarul va incepe
+        numar_raspunsuri_gresite = 0;                                                   //se reseteaza numarul de raspunsuri gresite inainte de resetarea chestionarului
+        numar_raspunsuri_corecte = 0;                                                   //se reseteaza numarul de raspunsuri corecte inainte de resetarea chestionarului
+        printf("Introduceti numele dvs.: ");
+        fgets(nume, sizeof(nume), stdin);
+        nume[strcspn(nume, "\n")] = '\0';                                    //se elimina caracterul "\n", newline, daca acesta este introdus de utilizator
+
+        for (int i = 0; i < TOTAL_INTREBARI; i++) {                                      //se vor afisa pe rand, intrebarile din array
+            printf("Intreabrea %d: %s\n\n", (i + 1), intrebari[i].intrebare);     //se va afisa intreabrea, alaturi de numarul ei
+            printf("A) %s\n", intrebari[i].raspunsA);
+            printf("B) %s\n", intrebari[i].raspunsB);
+            printf("C) %s\n", intrebari[i].raspunsC);
+            printf("\nAlegeti raspunsul (A, B sau C): ");
+
+            scanf(" %c", &raspuns);                                               //se citeste de la tastatura varianta de raspuns aleasa de user
+            clearInputBuffer();                                                          //se apeleaza functia clearInputBuffer pentru a sterge datele ramase
+                                                                                         //de la input-urile precedente
+            if (toupper(raspuns) == intrebari[i].raspuns_corect) {                    //se verifica raspunsul dat de utilizator cu cel corect
+                numar_raspunsuri_corecte++;                                              //daca conditia este indeplinita, va creste numarul de raspunsuri corecte cu 1
+                printf("\n\nRaspuns Corect!\n\n");                                //se afiseaza un mesaj ce anunta utilizatorul ca a raspuns corect
+            }else{
+                numar_raspunsuri_gresite++;                                              //daca conditia nu este verificata va greste nr. raspusnurilor gresite cu 1
+                printf("\n\nRaespuns Grsit!\n");                                  //se afiseaza un mesaj ce anunta utilizatorul ca a raspuns gresit
+                printf("Raspunsul corect era %c.\n\n", intrebari[i].raspuns_corect);    //se afiseaza un mesaj ce precizeaza raspunsul corect
+                if (numar_raspunsuri_gresite > MAX_RASPUNSURI_GRESITE) {                 //se verifica dupa fiecare raspuns gresit daca se depaseste nr. maxim de greseli
+                    printf("\nAti acumulat %d raspunsuri gresite! Din pacate calificativul dvs. este RESPINS!\n", MAX_RASPUNSURI_GRESITE);
+                    break;                                                               //daca se depaseset nr. maxim de greseli, se va iesi din loop, utilizatorului i se
+                }                                                                        //da optiunea de a reincepe chestionarul de la 0
+            }
+            printf("\nNumar raspunsuri corecte || Numar raspunsuri gresite:\n                       %d || %d.\n\n", numar_raspunsuri_corecte, numar_raspunsuri_gresite);
+        }                                                                               //dupa fiecare intrebare se va afisa scorul utilizatorului in acel moment
+        if (numar_raspunsuri_gresite < MAX_RASPUNSURI_GRESITE) {                        //la finalul tuturor intrebarilor se va verifica scorul utilizatorului
+            if (numar_raspunsuri_corecte >= MIN_RASPUNSURI_CORECTE) {
+                printf("\nFelicitari, %s! Ati acumulat %d raspunsuri corecte din %d de intrebari! Calificatul dvs. este ADMIS!\n", nume, numar_raspunsuri_corecte, TOTAL_INTREBARI);
+            } else {                                                                    //se va afisa un mesaj cu rezulatatul utilizatorului in functie de scorul sau
+                printf("\nNe pare rau, %s, dar nu ati acumulat suficiente raspunsuri corecte, iar calificativul dvs. este RESPINS!\n", nume);
+            }
+        }else{
+            printf("\nDoriti sa reluati chestionarul? (Da - 1 / Nu - 0): ");     //se intreaba utilizatorul daca doreste sa reincepa chestionarul
+            scanf("%d", &restart);                                               //se citeste alegerea utilizatorului
+            clearInputBuffer();                                                         //se goleste InputBuffer pentru a evita o suprapunere a optiunilor
+        }
+    }
+    printf("\nMultumim pentru participare, %s! La revedere!\n", nume);           //se afiseaza un mesaj de inchidere a programului in cazul in care
+}                                                                                       //utilizatorul nu doreste in inceapa chestionarul
+int main() {
+    chestionar();                                                                       //se apeleaza functia chestionar() pt. a rula logica chestionarului
+    return 0;
+}
